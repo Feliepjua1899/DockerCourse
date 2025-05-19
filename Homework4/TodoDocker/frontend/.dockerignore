@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+.env.local
+.env.development
+.env.test
+.git
+.gitignore
+.editorconfig
+.eslint*
+.vscode
+.idea
+*.log

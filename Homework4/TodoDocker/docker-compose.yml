@@ -1,0 +1,44 @@
+services:
+  mongodb:
+    image: mongo:6.0
+    networks:
+      - app-network
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  backend:
+    image: docker.jala.pro/docker-training/backend:rebeca.pereira-v2
+    networks:
+      - app-network
+    volumes:
+      - backend-logs:/app/data
+    environment:
+      MONGO_URL: "mongodb://admin:password@mongodb:27017/tasksdb?authSource=admin"
+      FRONTEND_URL: "http://frontend:4173,http://localhost:4173"
+    depends_on:
+      - mongodb
+    ports:
+      - "8000:8000"
+
+  frontend:
+    image: docker.jala.pro/docker-training/frontend:rebeca.pereira-v2
+    networks:
+      - app-network
+    volumes:
+      - frontend-config:/app/dist/src/configs
+    depends_on:
+      - backend
+    ports:
+      - "4173:4173"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  backend-logs:
+  frontend-config:
